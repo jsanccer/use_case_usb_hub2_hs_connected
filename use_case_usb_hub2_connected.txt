@@ -1,0 +1,161 @@
+USE CASE 2: everything plugged in and roland mc-707 soundcard plugged into usb-a type connector in the rear panel
+
+-error message "Error: Specified configuration may not be supported by the device. Code: -71" pops up on startup
+
+-selecting either internal or roland mc-707 in preferences/audio device causes the "Error: Specified configuration may not be supported by the device. Code: -71" to pop up and theres no sound from either the mpc or the mc-707.
+
+following are OS system logs and a speaker-test command that worked OK for the mc707 but KO (protocol error) for the mpc internal audio device.
+
+root@mpc-live-ii:~# journalctl -u inmusic-mpc -b
+-- Journal begins at Mon 2023-03-06 13:54:04 CET, ends at Mon 2023-03-06 13:56:55 CET. --
+Mar 06 13:54:11 mpc-live-ii systemd[1]: Started InMusic MPC Application.
+Mar 06 13:54:11 mpc-live-ii az01-launch-MPC[312]: *** TKGL MPC BOOTSTRAP ***
+Mar 06 13:54:11 mpc-live-ii az01-launch-MPC[312]: MPC Live Mk II detected
+Mar 06 13:54:11 mpc-live-ii az01-launch-MPC[312]: Mounted usb disks :
+Mar 06 13:54:11 mpc-live-ii az01-launch-MPC[325]: dfu-util: Failed to retrieve language identifiers
+Mar 06 13:54:11 mpc-live-ii az01-launch-MPC[325]: dfu-util: Failed to retrieve language identifiers
+Mar 06 13:54:12 mpc-live-ii az01-launch-MPC[312]: LibXtract compiled with ooura FFT
+Mar 06 13:54:12 mpc-live-ii az01-launch-MPC[312]: MPC 2.11.8
+Mar 06 13:54:12 mpc-live-ii az01-launch-MPC[312]: Reducing RLIMIT_DATA from 18446744073709551615 -> 1931595776
+Mar 06 13:54:13 mpc-live-ii az01-launch-MPC[312]: Reducing RLIMIT_DATA from 1931595776 -> 1929969664
+Mar 06 13:54:17 mpc-live-ii az01-launch-MPC[312]: Reducing RLIMIT_DATA from 1929969664 -> 1925926912
+Mar 06 13:54:17 mpc-live-ii az01-launch-MPC[312]: Error: Specified configuration may not be supported by the device.
+Mar 06 13:54:17 mpc-live-ii az01-launch-MPC[312]:  Code: -71
+Mar 06 13:54:17 mpc-live-ii az01-launch-MPC[312]: Error: Specified configuration may not be supported by the device.
+Mar 06 13:54:17 mpc-live-ii az01-launch-MPC[312]:  Code: -71
+Mar 06 13:54:17 mpc-live-ii az01-launch-MPC[312]: **** Failed to open ALSA device for capture hw:1
+Mar 06 13:54:17 mpc-live-ii az01-launch-MPC[312]: Error: Specified configuration may not be supported by the device.
+Mar 06 13:54:17 mpc-live-ii az01-launch-MPC[312]:  Code: -71
+Mar 06 13:54:17 mpc-live-ii az01-launch-MPC[312]: Error: Specified configuration may not be supported by the device.
+Mar 06 13:54:17 mpc-live-ii az01-launch-MPC[312]:  Code: -71
+Mar 06 13:54:17 mpc-live-ii az01-launch-MPC[312]: **** Failed to open ALSA device for capture hw:1
+Mar 06 13:54:18 mpc-live-ii az01-launch-MPC[312]: Reducing RLIMIT_DATA from 1925926912 -> 1925562368
+Mar 06 13:54:18 mpc-live-ii az01-launch-MPC[312]: **** UI has started, but no audio device was found
+Mar 06 13:54:18 mpc-live-ii az01-launch-MPC[312]: Reducing RLIMIT_DATA from 1925562368 -> 1925251072
+Mar 06 13:54:23 mpc-live-ii az01-launch-MPC[312]: ButtonStates reply from firmware: {0,0,0,0}
+
+
+
+root@mpc-live-ii:~# lsusb
+Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+Bus 002 Device 004: ID 09e8:2047 AKAI  Professional M.I. Corp. MPC Live II Audio
+Bus 002 Device 003: ID 09e8:0047 AKAI  Professional M.I. Corp. MPC Live II
+Bus 002 Device 006: ID 05e3:0743 Genesys Logic, Inc. SDXC and microSDXC CardReader
+Bus 002 Device 005: ID 0582:0229 Roland Corp. MC-707
+Bus 002 Device 002: ID 09e8:5047 AKAI  Professional M.I. Corp. MPC Live Mk 2 Hub
+Bus 002 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+
+root@mpc-live-ii:~# dmesg
+[    0.000000] Booting Linux on physical CPU 0x500
+[    0.000000] Linux version 5.15.89-inmusic-2023-01-18-rt56 (buildroot@buildroot) (arm-buildroot-linux-gnueabihf-gcc.br_real (Buildroot 2021.02.9-204-g1da559a23d) 10.3.0, GNU ld (GNU Binutils) 2.35.2) #1 SMP PREEMPT_RT Tue Jan 24 17:57:35 UTC 2023
+[    0.000000] CPU: ARMv7 Processor [410fc0d1] revision 1 (ARMv7), cr=10c5387d
+[    0.000000] CPU: div instructions available: patching division code
+[    0.000000] CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction cache
+[    0.000000] OF: fdt: Machine model: Akai Professional MPC Live Mk 2
+[    0.000000] Memory policy: Data cache writealloc
+[    0.000000] OF: reserved mem: initialized node framebuffer, compatible id rockchip,framebuffer-memory
+.
+.
+.
+[    0.068481] Advanced Linux Sound Architecture Driver Initialized.
+.
+.
+.
+[    0.562581] ALSA device list:
+[    0.562586]   No soundcards found.
+.
+.
+.
+[    1.434845] usb 2-1.5: new full-speed USB device number 3 using ehci-platform
+[    1.537741] usb 2-1.5: New USB device found, idVendor=09e8, idProduct=0047, bcdDevice= 0.44
+[    1.537748] usb 2-1.5: New USB device strings: Mfr=1, Product=2, SerialNumber=0
+[    1.537753] usb 2-1.5: Product: MPC Live II
+[    1.537757] usb 2-1.5: Manufacturer: Akai Pro
+[    1.621265] usb 2-1.6: new high-speed USB device number 4 using ehci-platform
+[    1.730615] usb 2-1.6: New USB device found, idVendor=09e8, idProduct=2047, bcdDevice= 0.11
+[    1.730622] usb 2-1.6: New USB device strings: Mfr=1, Product=3, SerialNumber=0
+[    1.730626] usb 2-1.6: Product: MPC Live II Audio
+[    1.730630] usb 2-1.6: Manufacturer: Akai Pro
+.
+.
+.
+[    2.814565] usb 2-1.1: New USB device found, idVendor=0582, idProduct=0229, bcdDevice= 1.00
+[    2.814573] usb 2-1.1: New USB device strings: Mfr=1, Product=2, SerialNumber=0
+[    2.814578] usb 2-1.1: Product: MC-707
+[    2.814581] usb 2-1.1: Manufacturer: Roland
+.
+.
+.
+[    5.156834] Bluetooth: hci0: BCM4345C0 UART 37.4 MHz wlbga_ref_iLNA_iTR_eLG [Baseline: 0143]
+[    5.156845] Bluetooth: hci0: BCM4345C0 (003.001.025) build 0230
+[   10.208296] random: systemd-journal: uninitialized urandom read (16 bytes read)
+[   13.739279] random: crng init done
+[   13.739286] random: 244 urandom warning(s) missed due to ratelimiting
+[   15.574378] usb 2-1.6: 1:0: usb_set_interface failed (-71)
+[   15.578627] usb 2-1.6: uac_clock_source_is_valid(): cannot get clock validity for id 41
+[   15.578635] usb 2-1.6: clock source 41 is not valid, cannot use
+[   15.587123] usb 2-1.6: 1:0: usb_set_interface failed (-71)
+[   15.591621] usb 2-1.6: 2:0: usb_set_interface failed (-71)
+[   15.595869] usb 2-1.6: uac_clock_source_is_valid(): cannot get clock validity for id 41
+[   15.595876] usb 2-1.6: clock source 41 is not valid, cannot use
+[   15.604371] usb 2-1.6: 2:0: usb_set_interface failed (-71)
+[   15.609255] usb 2-1.6: 1:0: usb_set_interface failed (-71)
+[   15.613499] usb 2-1.6: uac_clock_source_is_valid(): cannot get clock validity for id 41
+[   15.613508] usb 2-1.6: clock source 41 is not valid, cannot use
+[   15.621996] usb 2-1.6: 1:0: usb_set_interface failed (-71)
+[   15.627254] usb 2-1.6: 2:0: usb_set_interface failed (-71)
+[   15.631499] usb 2-1.6: uac_clock_source_is_valid(): cannot get clock validity for id 41
+[   15.631507] usb 2-1.6: clock source 41 is not valid, cannot use
+[   15.639997] usb 2-1.6: 2:0: usb_set_interface failed (-71)
+[   16.928163] IPv6: ADDRCONF(NETDEV_CHANGE): wlan0: link becomes ready
+[   38.174997] usb 2-1.6: 1:0: usb_set_interface failed (-71)
+[   38.179245] usb 2-1.6: uac_clock_source_is_valid(): cannot get clock validity for id 41
+[   38.179252] usb 2-1.6: clock source 41 is not valid, cannot use
+[   38.187742] usb 2-1.6: 1:0: usb_set_interface failed (-71)
+[   38.192246] usb 2-1.6: 2:0: usb_set_interface failed (-71)
+[   38.196496] usb 2-1.6: uac_clock_source_is_valid(): cannot get clock validity for id 41
+[   38.196503] usb 2-1.6: clock source 41 is not valid, cannot use
+[   38.204993] usb 2-1.6: 2:0: usb_set_interface failed (-71)
+
+
+root@mpc-live-ii:~# aplay -l
+**** List of PLAYBACK Hardware Devices ****
+card 1: Audio [MPC Live II Audio], device 0: USB Audio [USB Audio]
+  Subdevices: 1/1
+  Subdevice #0: subdevice #0
+card 2: MC707 [MC-707], device 0: USB Audio [USB Audio]
+  Subdevices: 1/1
+  Subdevice #0: subdevice #0
+  
+  
+root@mpc-live-ii:~# speaker-test -Dplughw:CARD=MC707 -c4 -s2 -twav
+
+speaker-test 1.2.4
+
+Playback device is plughw:CARD=MC707
+Stream parameters are 48000Hz, S16_LE, 4 channels
+WAV file(s)
+Rate set to 48000Hz (requested 48000Hz)
+Buffer size range from 13 to 96000
+Period size range from 6 to 48000
+Using max buffer size 96000
+Periods = 4
+was set period_size = 24000
+was set buffer_size = 96000
+  - Front Center
+  
+
+root@mpc-live-ii:~# speaker-test -Dplughw:CARD=Audio -c4 -s2 -twav
+
+speaker-test 1.2.4
+
+Playback device is plughw:CARD=Audio
+Stream parameters are 48000Hz, S16_LE, 4 channels
+WAV file(s)
+Rate set to 48000Hz (requested 48000Hz)
+Buffer size range from 12 to 96000
+Period size range from 6 to 48000
+Using max buffer size 96000
+Periods = 4
+Unable to set hw params for playback: Protocol error
+Setting of hwparams failed: Protocol error
